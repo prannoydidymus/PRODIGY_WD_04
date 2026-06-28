@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexusChat | Premium Real-Time Messenger</title>
+  <meta name="description" content="Sleek, real-time messaging application powered by WebSockets. Experience premium glassmorphism design, private and public chat rooms, file sharing, and smart voice greetings.">
+  
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background Animated Orbs -->
+  <div class="orb-container">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ==========================================
+       AUTHENTICATION OVERLAY
+       ========================================== -->
+  <div id="auth-overlay" class="auth-overlay">
+    <div class="auth-card glass">
+      <div class="auth-header">
+        <div class="brand-logo animate-pulse">
+          <i class="fa-solid fa-comments-dollar"></i>
+        </div>
+        <h2>Welcome to NexusChat</h2>
+        <p>Your premium real-time collaboration space</p>
+      </div>
+
+      <!-- Quick Seed Login Option -->
+      <div class="quick-login-container">
+        <button id="btn-quick-login" class="btn btn-secondary btn-quick-login">
+          <i class="fa-solid fa-user-astronaut"></i> Log in as <span>prannoy</span>
+        </button>
+      </div>
+
+      <div class="auth-divider">
+        <span>or use credentials</span>
+      </div>
+
+      <!-- Auth Forms -->
+      <div class="auth-forms">
+        <!-- Login Form -->
+        <form id="login-form" class="auth-form active">
+          <div class="form-group">
+            <label for="login-username"><i class="fa-solid fa-user"></i> Username</label>
+            <input type="text" id="login-username" placeholder="e.g. prannoy" required autocomplete="username">
+          </div>
+          <div class="form-group">
+            <label for="login-password"><i class="fa-solid fa-lock"></i> Password</label>
+            <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn btn-primary w-full">
+            Sign In <i class="fa-solid fa-arrow-right-to-bracket"></i>
+          </button>
+          <p class="auth-switch">Don't have an account? <a href="#" id="go-to-register">Create Account</a></p>
+        </form>
+
+        <!-- Register Form -->
+        <form id="register-form" class="auth-form">
+          <div class="form-group">
+            <label for="register-username"><i class="fa-solid fa-user-plus"></i> Choose Username</label>
+            <input type="text" id="register-username" placeholder="3-20 characters" required minlength="3" maxlength="20">
+          </div>
+          <div class="form-group">
+            <label for="register-password"><i class="fa-solid fa-key"></i> Password</label>
+            <input type="password" id="register-password" placeholder="At least 6 characters" required minlength="6">
+          </div>
+          <button type="submit" class="btn btn-accent w-full">
+            Register Account <i class="fa-solid fa-user-plus"></i>
+          </button>
+          <p class="auth-switch">Already registered? <a href="#" id="go-to-login">Sign In</a></p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MAIN CHAT DASHBOARD
+       ========================================== -->
+  <div id="app-container" class="app-container glass hidden">
+    
+    <!-- LEFT PANEL: NAVIGATION & ROOMS -->
+    <aside class="sidebar-left">
+      <div class="sidebar-header">
+        <div class="brand">
+          <i class="fa-solid fa-circle-nodes brand-icon"></i>
+          <h1>NexusChat</h1>
+        </div>
+        <button id="btn-logout" class="btn-icon" title="Logout">
+          <i class="fa-solid fa-power-off"></i>
+        </button>
+      </div>
+
+      <!-- PROFILE INFO & HELLO PRANNOY CALL BUTTON -->
+      <div class="profile-card glass-inset">
+        <div class="profile-avatar">
+          <img id="user-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=prannoy" alt="Avatar">
+          <div class="status-badge online"></div>
+        </div>
+        <div class="profile-details">
+          <span class="welcome-text">Greetings,</span>
+          <h3 id="current-username">Guest User</h3>
+        </div>
+        <!-- Voice Calling Greeting Button -->
+        <button id="btn-call-greeting" class="btn-icon voice-btn animate-bounce" title="Calling Hello Prannoy">
+          <i class="fa-solid fa-microphone-lines"></i>
+        </button>
+      </div>
+
+      <!-- ROOMS DIRECTORY -->
+      <div class="rooms-section">
+        <div class="section-title">
+          <span><i class="fa-solid fa-folder-open"></i> Chat Rooms</span>
+          <button id="btn-show-create-room" class="btn-icon" title="Create Chat Room">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        </div>
+
+        <div class="rooms-list-container" id="rooms-list">
+          <!-- Injected via app.js -->
+          <div class="room-skeleton"></div>
+          <div class="room-skeleton"></div>
+          <div class="room-skeleton"></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER PANEL: CHAT INTERACTIVE VIEW -->
+    <main class="chat-viewport">
+      <!-- Active Chat Header -->
+      <header class="chat-header">
+        <div class="active-room-info">
+          <div class="room-icon-wrapper">
+            <i class="fa-solid fa-hashtag" id="active-room-icon"></i>
+          </div>
+          <div>
+            <h2 id="active-room-name">Select a Room</h2>
+            <p id="active-room-description">Join a channel from the sidebar to start exchanging messages.</p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button id="btn-speak-room" class="btn-icon" title="Read Room Name & Description" style="margin-right: 8px;">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+          <span id="active-room-type-badge" class="badge">Public</span>
+        </div>
+      </header>
+
+      <!-- Message Area -->
+      <section class="messages-container" id="messages-container">
+        <!-- Introduction Screen -->
+        <div class="welcome-intro" id="welcome-intro">
+          <i class="fa-solid fa-comments welcome-icon"></i>
+          <h2>Welcome, <span class="username-highlight" id="greeting-username">Prannoy</span>!</h2>
+          <p>This is a real-time messaging workspace built with Socket.io, Node.js, and Vanilla CSS.</p>
+          <p class="small">Click the microphone button <i class="fa-solid fa-microphone-lines"></i> in your profile card to trigger the voice assistant!</p>
+        </div>
+        <!-- Messages get injected dynamically here -->
+      </section>
+
+      <!-- Typing Indicator Row -->
+      <div id="typing-indicator-bar" class="typing-indicator-bar hidden">
+        <div class="typing-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <span id="typing-text">someone is typing...</span>
+      </div>
+
+      <!-- Message Input Composer -->
+      <footer class="chat-composer">
+        <!-- Upload Previews -->
+        <div id="composer-preview" class="composer-preview hidden">
+          <div class="preview-item">
+            <span id="preview-filename">image.jpg</span>
+            <button id="btn-remove-preview" class="btn-icon"><i class="fa-solid fa-times"></i></button>
+          </div>
+        </div>
+
+        <form id="composer-form" class="composer-form-layout">
+          <!-- Attachment Button -->
+          <div class="composer-action">
+            <button type="button" id="btn-attach" class="btn-icon attach-btn" title="Upload Image/File">
+              <i class="fa-solid fa-paperclip"></i>
+            </button>
+            <input type="file" id="file-input" class="hidden" accept="image/*,application/pdf,text/*,audio/*,video/*">
+          </div>
+
+          <!-- Text Field -->
+          <input type="text" id="composer-input" placeholder="Type a message or paste images..." autocomplete="off" disabled>
+
+          <!-- Submit Button -->
+          <button type="submit" id="btn-send-message" class="btn btn-primary btn-send" disabled>
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </form>
+      </footer>
+    </main>
+
+    <!-- RIGHT PANEL: ONLINE PRESENCE & DIRECT MESSAGES -->
+    <aside class="sidebar-right">
+      <div class="sidebar-header">
+        <div class="brand">
+          <i class="fa-solid fa-users"></i>
+          <h2>Active Users</h2>
+        </div>
+      </div>
+
+      <!-- Online Users List -->
+      <div class="users-list-container" id="online-users-list">
+        <!-- Injected via app.js -->
+        <div class="user-skeleton"></div>
+        <div class="user-skeleton"></div>
+      </div>
+
+      <!-- Direct Messages Section Header -->
+      <div class="sidebar-header dm-header">
+        <div class="brand">
+          <i class="fa-solid fa-paper-plane"></i>
+          <h2>Direct Messages</h2>
+        </div>
+      </div>
+
+      <div class="users-list-container" id="dm-users-list">
+        <!-- Active DMs lists -->
+        <p class="dm-fallback">Click on an active user above to initiate a direct message conversation.</p>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- ==========================================
+       CREATE ROOM MODAL
+       ========================================== -->
+  <div id="room-modal-overlay" class="modal-overlay hidden">
+    <div class="modal-card glass">
+      <div class="modal-header">
+        <h3>Create New Chat Room</h3>
+        <button id="btn-close-room-modal" class="btn-icon"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="create-room-form">
+        <div class="form-group">
+          <label for="room-name">Room Name</label>
+          <input type="text" id="room-name" placeholder="e.g. general-chatter" required maxlength="30" pattern="^[a-zA-Z0-9-_]+$">
+          <p class="input-help">Use alphanumeric characters, hyphens or underscores.</p>
+        </div>
+        <div class="form-group">
+          <label for="room-desc">Description</label>
+          <input type="text" id="room-desc" placeholder="e.g. Chat about random things..." maxlength="100">
+        </div>
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="room-private">
+          <label for="room-private">Make Room Private (Password Protected)</label>
+        </div>
+        <div id="room-password-group" class="form-group hidden">
+          <label for="room-password">Room Password</label>
+          <input type="password" id="room-password" placeholder="Minimum 4 characters" minlength="4">
+        </div>
+        <button type="submit" class="btn btn-primary w-full">Create & Join Room</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       PASSWORD INPUT MODAL (FOR PRIVATE ROOMS)
+       ========================================== -->
+  <div id="password-modal-overlay" class="modal-overlay hidden">
+    <div class="modal-card glass password-card">
+      <div class="modal-header">
+        <h3>Private Room Authentication</h3>
+        <button id="btn-close-password-modal" class="btn-icon"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="password-room-form">
+        <p>This room requires a password to join. Please enter it below:</p>
+        <div class="form-group">
+          <input type="password" id="join-room-password" placeholder="Enter room password" required>
+        </div>
+        <button type="submit" class="btn btn-accent w-full">Verify Password & Join</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Include Socket.io client -->
+  <script src="/socket.io/socket.io.js"></script>
+  <!-- Main Script -->
+  <script src="app.js"></script>
+</body>
+</html>
