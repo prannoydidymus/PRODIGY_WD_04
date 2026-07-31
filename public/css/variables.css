@@ -1,0 +1,103 @@
+/* Variables and Design System Tokens */
+
+:root {
+  /* Font Family */
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  
+  /* Shared Base Tokens */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  --border-radius-sm: 8px;
+  --border-radius-md: 14px;
+  --border-radius-lg: 24px;
+  --border-radius-xl: 32px;
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.2);
+  
+  /* Theme-dependent Tokens (Default: Dark Mode) */
+  --bg-gradient: linear-gradient(135deg, #0f0c20 0%, #15102a 50%, #06040d 100%);
+  --panel-bg: rgba(20, 16, 38, 0.6);
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --panel-blur: blur(20px);
+  
+  --text-primary: #f3f0ff;
+  --text-secondary: #9f9cb5;
+  --text-muted: #64617a;
+  
+  --primary: #8b5cf6;       /* Violet */
+  --primary-hover: #7c3aed;
+  --primary-glow: rgba(139, 92, 246, 0.3);
+  --primary-gradient: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+  
+  --secondary: #06b6d4;     /* Cyan */
+  --secondary-hover: #0891b2;
+  --secondary-glow: rgba(6, 182, 212, 0.3);
+  --secondary-gradient: linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%);
+  
+  --accent: #ec4899;        /* Pink */
+  --accent-glow: rgba(236, 72, 153, 0.35);
+  
+  --sidebar-bg: rgba(12, 9, 24, 0.45);
+  --chat-bg: rgba(16, 12, 32, 0.3);
+  --input-bg: rgba(255, 255, 255, 0.05);
+  --input-border: rgba(255, 255, 255, 0.1);
+  --input-focus-border: rgba(139, 92, 246, 0.5);
+  
+  --message-self-bg: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+  --message-self-text: #ffffff;
+  --message-other-bg: rgba(255, 255, 255, 0.08);
+  --message-other-text: #f3f0ff;
+  
+  --status-online: #10b981;  /* Emerald */
+  --status-offline: #64617a;
+  --status-typing: #f59e0b;
+  
+  --scrollbar-thumb: rgba(255, 255, 255, 0.12);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.25);
+}
+
+/* Light Mode Variables Override */
+[data-theme="light"] {
+  --bg-gradient: linear-gradient(135deg, #eef2f7 0%, #e0e7ff 50%, #dbeafe 100%);
+  --panel-bg: rgba(255, 255, 255, 0.65);
+  --panel-border: rgba(255, 255, 255, 0.4);
+  --panel-blur: blur(20px);
+  
+  --text-primary: #1e1b4b;   /* Deep indigo */
+  --text-secondary: #4f46e5; /* Slate-indigo */
+  --text-muted: #8a8fb5;
+  
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-glow: rgba(79, 70, 229, 0.2);
+  --primary-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  
+  --secondary: #0ea5e9;     /* Sky blue */
+  --secondary-hover: #0284c7;
+  --secondary-glow: rgba(14, 165, 233, 0.2);
+  --secondary-gradient: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+  
+  --accent: #db2777;
+  --accent-glow: rgba(219, 39, 119, 0.2);
+  
+  --sidebar-bg: rgba(255, 255, 255, 0.4);
+  --chat-bg: rgba(255, 255, 255, 0.2);
+  --input-bg: rgba(255, 255, 255, 0.7);
+  --input-border: rgba(79, 70, 229, 0.15);
+  --input-focus-border: rgba(79, 70, 229, 0.5);
+  
+  --message-self-bg: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  --message-self-text: #ffffff;
+  --message-other-bg: rgba(255, 255, 255, 0.9);
+  --message-other-text: #1e1b4b;
+  
+  --status-online: #10b981;
+  --status-offline: #8a8fb5;
+  
+  --scrollbar-thumb: rgba(0, 0, 0, 0.1);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.2);
+}
